@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product Details | Kaizen Hub</title>
+  <meta name="description" content="View product specifications, size & color options, and order directly on WhatsApp from Kaizen Hub." />
+  <link rel="icon" type="image/jpeg" href="images/logo.jpg" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet" />
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Supabase JS Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Top Announcement Bar -->
+  <div class="announcement-bar">
+    <div class="container announcement-content">
+      <div class="announcement-features">
+        <div class="announcement-item"><i class="fa-solid fa-crown"></i> Premium Quality</div>
+        <div class="announcement-item"><i class="fa-solid fa-star"></i> Trusted by Thousands</div>
+        <div class="announcement-item"><i class="fa-solid fa-truck-fast"></i> Fast & Safe Delivery</div>
+      </div>
+      <div class="announcement-right">
+        <span>Follow Us:</span>
+        <div class="social-icons-top">
+          <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Navigation Header -->
+  <header class="main-header">
+    <div class="container header-inner">
+      <!-- Mobile Menu Hamburger Button -->
+      <button id="mobile-menu-btn" class="btn-mobile-menu" aria-label="Open Navigation Menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+
+      <!-- Brand Logo -->
+      <a href="index.html" class="brand-logo">
+        <img src="images/logo.png" alt="Kaizen Hub Logo" class="brand-logo-img" />
+      </a>
+
+      <!-- Main Navigation Menu (Desktop) -->
+      <ul class="main-nav-links">
+        <li><a href="index.html" class="main-nav-link">Home</a></li>
+        <li><a href="shop.html" class="main-nav-link active">Shop Collection</a></li>
+        <li><a href="about.html" class="main-nav-link">About Us</a></li>
+        <li><a href="contact.html" class="main-nav-link">Contact</a></li>
+      </ul>
+
+      <!-- Search Bar -->
+      <div class="header-search">
+        <form action="shop.html" method="GET" class="search-wrapper">
+          <i class="fa-solid fa-magnifying-glass" style="color: var(--gold-primary); font-size: 0.9rem;"></i>
+          <input type="text" name="search" class="search-input" placeholder="Search products in Shop..." />
+          <button type="submit" class="search-btn" aria-label="Search Shop">
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </form>
+      </div>
+
+      <!-- Header Actions -->
+      <div class="header-actions">
+        <a href="https://wa.me/919789975490?text=Hello%20Kaizen%20Hub,%20I%20would%20like%20to%20inquire%20about%20your%20collection." target="_blank" class="btn-header-wa">
+          <i class="fa-brands fa-whatsapp"></i>
+          <span>WhatsApp Us</span>
+        </a>
+
+        <button id="cart-btn" class="btn-cart" aria-label="View Order List">
+          <i class="fa-solid fa-bag-shopping"></i>
+          <span id="cart-badge" class="cart-badge">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Menu Drawer Overlay -->
+  <div id="mobile-nav-overlay" class="mobile-nav-overlay">
+    <div class="mobile-nav-drawer">
+      <div class="mobile-nav-header">
+        <a href="index.html" class="brand-logo">
+          <img src="images/logo.png" alt="Kaizen Hub Logo" class="brand-logo-img" />
+        </a>
+        <button id="close-mobile-nav-btn" class="modal-close-btn" style="position: static;" aria-label="Close menu">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <ul class="mobile-nav-menu-list">
+        <li><a href="index.html" class="mobile-nav-link"><i class="fa-solid fa-house"></i> Home</a></li>
+        <li><a href="shop.html" class="mobile-nav-link active"><i class="fa-solid fa-bag-shopping"></i> Shop Collection (All Products)</a></li>
+        <li><a href="about.html" class="mobile-nav-link"><i class="fa-solid fa-circle-info"></i> About Us</a></li>
+        <li><a href="contact.html" class="mobile-nav-link"><i class="fa-solid fa-headset"></i> Contact Us</a></li>
+      </ul>
+
+      <div style="margin-top: auto; padding-top: 15px; border-top: 1px solid var(--gold-border);">
+        <a href="https://wa.me/919789975490" target="_blank" class="btn-primary-gold" style="width: 100%; text-align: center; font-size: 0.85rem; padding: 10px;">
+          <i class="fa-brands fa-whatsapp"></i> Chat on WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product Detail Section -->
+  <section class="product-detail-section">
+    <div class="container">
+      <!-- Breadcrumbs -->
+      <div id="detail-breadcrumb" class="breadcrumbs" style="margin-bottom: 24px;">
+        <a href="index.html">Home</a> <span>/</span> <a href="shop.html">Shop Collection</a> <span>/</span> <span>Product Details</span>
+      </div>
+
+      <!-- Main Detail Grid -->
+      <div class="detail-grid">
+        <!-- Gallery -->
+        <div class="detail-gallery">
+          <div class="detail-main-img">
+            <img id="detail-main-img" src="images/saree_silk_green.jpg" alt="Product Image" />
+          </div>
+          <div id="detail-thumbs" class="detail-thumbs"></div>
+        </div>
+
+        <!-- Details & Options -->
+        <div class="detail-content">
+          <h1 id="detail-title" class="hero-title" style="font-size: 2rem; margin-bottom: 4px;">Premium Silk Saree</h1>
+          <div id="detail-code" class="product-sku" style="font-size: 0.9rem; margin-bottom: 10px;">Product Code: KS102</div>
+          <div id="detail-reviews" class="product-rating" style="font-size: 0.9rem; margin-bottom: 16px;"></div>
+
+          <div class="modal-price-row" style="margin-bottom: 20px;">
+            <span id="detail-price" class="modal-current-price">₹2,499</span>
+            <span id="detail-original-price" class="modal-original-price">₹3,499</span>
+            <span id="detail-discount" class="modal-discount">(29% OFF)</span>
+          </div>
+
+          <p id="detail-description" style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; margin-bottom: 24px;"></p>
+
+          <!-- Size Options -->
+          <div class="variant-block">
+            <label class="variant-label">Choose Size / Stitching Option:</label>
+            <div id="detail-size-container" class="size-selector"></div>
+          </div>
+
+          <!-- Color Swatches -->
+          <div class="variant-block">
+            <label class="variant-label">Choose Color:</label>
+            <div id="detail-color-container" class="color-selector"></div>
+          </div>
+
+          <!-- Quantity -->
+          <div class="variant-block">
+            <label class="variant-label">Quantity:</label>
+            <div class="qty-counter">
+              <button class="qty-btn" onclick="updateDetailQty(-1)"><i class="fa-solid fa-minus"></i></button>
+              <input type="text" id="detail-qty-input" class="qty-input" value="1" readonly />
+              <button class="qty-btn" onclick="updateDetailQty(1)"><i class="fa-solid fa-plus"></i></button>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="modal-actions" style="margin: 28px 0;">
+            <button class="btn-modal-wa" onclick="orderFromDetailWhatsApp()" style="font-size: 1rem; padding: 16px;">
+              <i class="fa-brands fa-whatsapp" style="font-size: 1.3rem;"></i> ORDER ON WHATSAPP
+            </button>
+            <button class="btn-modal-cart" onclick="addDetailToCart()" style="padding: 14px;">
+              <i class="fa-regular fa-heart"></i> ADD TO ORDER LIST
+            </button>
+          </div>
+
+          <!-- Accordions -->
+          <div class="accordion-item active">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span>Product Specifications</span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </div>
+            <div class="accordion-body">
+              <ul style="list-style: none; display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem;">
+                <li><strong>Fabric:</strong> <span id="spec-fabric">-</span></li>
+                <li><strong>Length / Dimensions:</strong> <span id="spec-length">-</span></li>
+                <li><strong>Work / Pattern:</strong> <span id="spec-work">-</span></li>
+                <li><strong>Occasion:</strong> <span id="spec-occasion">-</span></li>
+                <li><strong>Care Instructions:</strong> <span id="spec-care">-</span></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span>Shipping & Delivery</span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </div>
+            <div class="accordion-body">
+              Dispatched within 24-48 hours. Standard courier delivery takes 3-5 business days across India. Tracking details shared instantly via WhatsApp.
+            </div>
+          </div>
+
+          <div class="accordion-item">
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+              <span>Return & Exchange Policy</span>
+              <i class="fa-solid fa-chevron-down"></i>
+            </div>
+            <div class="accordion-body">
+              Hassle-free 7-day exchange for size/defect issues. Simply message our WhatsApp support team with your unboxing video for instant replacement.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Related Category Products Section -->
+      <div style="margin-top: 50px;">
+        <div class="section-top-bar">
+          <div class="section-heading-left">
+            <h2>MORE FROM THIS CATEGORY</h2>
+            <p>Handpicked styles matching your selection</p>
+          </div>
+          <a href="shop.html" class="btn-view-all-link">
+            Explore All in Shop <i class="fa-solid fa-arrow-right"></i>
+          </a>
+        </div>
+
+        <div class="product-grid" id="related-products-grid">
+          <!-- Rendered by app.js -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Footer -->
+  <footer class="main-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <a href="index.html" class="brand-logo" style="margin-bottom: 16px; display: inline-block;">
+            <img src="images/logo.png" alt="Kaizen Hub Logo" class="brand-logo-footer-img" />
+          </a>
+          <p>Your premier destination for luxury sarees, designer kurtis, 3-piece sets, kids festive wear, and dress materials. Exceptional quality, elegant style & hassle-free WhatsApp ordering.</p>
+          <div class="social-icons-top">
+            <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href="#"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#"><i class="fa-brands fa-youtube"></i></a>
+            <a href="https://wa.me/919789975490" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h3>QUICK LINKS</h3>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="shop.html">Shop All Collections</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+            <li><a href="shop.html?category=offers">Special Offers & Deals</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h3>CATEGORIES (IN SHOP)</h3>
+          <ul class="footer-links">
+            <li><a href="shop.html?category=sarees">Silk & Heritage Sarees</a></li>
+            <li><a href="shop.html?category=kids">Kids Collection</a></li>
+            <li><a href="shop.html?category=kurtis">Designer Kurtis</a></li>
+            <li><a href="shop.html?category=3piece">3-Piece Festive Sets</a></li>
+            <li><a href="shop.html?category=dressmaterials">Dress Materials</a></li>
+            <li><a href="shop.html?category=women">Women's Fashion</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h3>CONTACT US</h3>
+          <div class="footer-contact-item">
+            <i class="fa-brands fa-whatsapp"></i>
+            <div>
+              <strong>WhatsApp Ordering:</strong><br />
+              <a href="https://wa.me/919789975490" target="_blank" style="color: var(--gold-light); text-decoration: none;">+91 9789975490</a>
+            </div>
+          </div>
+          <div class="footer-contact-item">
+            <i class="fa-regular fa-envelope"></i>
+            <div>
+              <strong>Email:</strong><br />
+              <a href="mailto:hubkaizen95@gmail.com" style="color: var(--gold-light); text-decoration: none;">hubkaizen95@gmail.com</a>
+            </div>
+          </div>
+          <div class="footer-contact-item">
+            <i class="fa-solid fa-location-dot"></i>
+            <div>
+              <strong>Location:</strong><br />
+              <span>Tamil Nadu, India</span>
+            </div>
+          </div>
+
+          <div class="footer-wa-box">
+            <h5>100% WhatsApp Ordering</h5>
+            <p>No Online Payment Hassle • Direct Chat</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2026 Kaizen Hub. All Rights Reserved.</p>
+        <div>
+          <a href="about.html">About Us</a>
+          <a href="contact.html">Contact Us</a>
+          <a href="shop.html">Shop</a>
+          <a href="admin.html" style="color: rgba(212, 175, 55, 0.6);"><i class="fa-solid fa-lock" style="font-size: 0.75rem;"></i> Admin</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Floating WhatsApp Action Button -->
+  <a href="https://wa.me/919789975490?text=Hello%20Kaizen%20Hub,%20I%20would%20like%20to%20order%20products." target="_blank" class="floating-wa-btn" aria-label="Direct WhatsApp Order">
+    <i class="fa-brands fa-whatsapp"></i>
+  </a>
+
+  <!-- Cart / Order List Drawer -->
+  <div id="cart-drawer-overlay" class="cart-drawer-overlay">
+    <div class="cart-drawer">
+      <div class="cart-header">
+        <h3><i class="fa-solid fa-basket-shopping" style="color: var(--gold-primary); margin-right: 8px;"></i> WhatsApp Order List</h3>
+        <button id="close-cart-btn" class="modal-close-btn" style="position: static;" aria-label="Close cart">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div id="cart-items-container" class="cart-items-container"></div>
+
+      <div class="cart-footer">
+        <div class="cart-subtotal-row">
+          <span>Subtotal:</span>
+          <span id="cart-subtotal">₹0</span>
+        </div>
+
+        <div class="cart-customer-inputs">
+          <input type="text" id="checkout-name" class="cart-input" placeholder="Your Full Name" />
+          <input type="text" id="checkout-phone" class="cart-input" placeholder="Your WhatsApp Contact Number" />
+          <input type="text" id="checkout-address" class="cart-input" placeholder="Delivery Address & Pincode" />
+        </div>
+
+        <button id="btn-checkout-wa" class="btn-checkout-wa">
+          <i class="fa-brands fa-whatsapp" style="font-size: 1.2rem;"></i> CONFIRM ORDER ON WHATSAPP
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast-box">
+    <i class="fa-solid fa-circle-check" style="color: var(--gold-primary);"></i>
+    <span id="toast-text">Item added to order list!</span>
+  </div>
+
+  <!-- JavaScript -->
+  <script src="app.js"></script>
+</body>
+</html>

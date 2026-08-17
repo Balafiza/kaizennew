@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Us | Kaizen Hub - Elevate Your Style</title>
+  <meta name="description" content="Discover the story behind Kaizen Hub. We bring premium Indian ethnic fashion directly to your doorstep with personalized WhatsApp ordering." />
+  <link rel="icon" type="image/jpeg" href="images/logo.jpg" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet" />
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Supabase JS Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Top Announcement Bar -->
+  <div class="announcement-bar">
+    <div class="container announcement-content">
+      <div class="announcement-features">
+        <div class="announcement-item"><i class="fa-solid fa-crown"></i> Premium Quality</div>
+        <div class="announcement-item"><i class="fa-solid fa-star"></i> Trusted by Thousands</div>
+        <div class="announcement-item"><i class="fa-solid fa-truck-fast"></i> Fast & Safe Delivery</div>
+      </div>
+      <div class="announcement-right">
+        <span>Follow Us:</span>
+        <div class="social-icons-top">
+          <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Navigation Header -->
+  <header class="main-header">
+    <div class="container header-inner">
+      <!-- Mobile Menu Hamburger Button -->
+      <button id="mobile-menu-btn" class="btn-mobile-menu" aria-label="Open Navigation Menu">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+
+      <!-- Brand Logo -->
+      <a href="index.html" class="brand-logo">
+        <img src="images/logo.png" alt="Kaizen Hub Logo" class="brand-logo-img" />
+      </a>
+
+      <!-- Main Navigation Menu (Desktop) -->
+      <ul class="main-nav-links">
+        <li><a href="index.html" class="main-nav-link">Home</a></li>
+        <li><a href="shop.html" class="main-nav-link">Shop Collection</a></li>
+        <li><a href="about.html" class="main-nav-link active">About Us</a></li>
+        <li><a href="contact.html" class="main-nav-link">Contact</a></li>
+      </ul>
+
+      <!-- Search Bar -->
+      <div class="header-search">
+        <form action="shop.html" method="GET" class="search-wrapper">
+          <i class="fa-solid fa-magnifying-glass" style="color: var(--gold-primary); font-size: 0.9rem;"></i>
+          <input type="text" name="search" class="search-input" placeholder="Search products in Shop..." />
+          <button type="submit" class="search-btn" aria-label="Search">
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </form>
+      </div>
+
+      <!-- Header Actions -->
+      <div class="header-actions">
+        <a href="https://wa.me/919789975490?text=Hello%20Kaizen%20Hub,%20I%20would%20like%20to%20inquire%20about%20your%20collection." target="_blank" class="btn-header-wa">
+          <i class="fa-brands fa-whatsapp"></i>
+          <span>WhatsApp Us</span>
+        </a>
+
+        <button id="cart-btn" class="btn-cart" aria-label="View Order List">
+          <i class="fa-solid fa-bag-shopping"></i>
+          <span id="cart-badge" class="cart-badge">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Menu Drawer Overlay -->
+  <div id="mobile-nav-overlay" class="mobile-nav-overlay">
+    <div class="mobile-nav-drawer">
+      <div class="mobile-nav-header">
+        <a href="index.html" class="brand-logo">
+          <img src="images/logo.png" alt="Kaizen Hub Logo" class="brand-logo-img" />
+        </a>
+        <button id="close-mobile-nav-btn" class="modal-close-btn" style="position: static;" aria-label="Close menu">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <ul class="mobile-nav-menu-list">
+        <li><a href="index.html" class="mobile-nav-link"><i class="fa-solid fa-house"></i> Home</a></li>
+        <li><a href="shop.html" class="mobile-nav-link"><i class="fa-solid fa-bag-shopping"></i> Shop Collection (All Products)</a></li>
+        <li><a href="about.html" class="mobile-nav-link active"><i class="fa-solid fa-circle-info"></i> About Us</a></li>
+        <li><a href="contact.html" class="mobile-nav-link"><i class="fa-solid fa-headset"></i> Contact Us</a></li>
+      </ul>
+
+      <div style="margin-top: auto; padding-top: 15px; border-top: 1px solid var(--gold-border);">
+        <a href="https://wa.me/919789975490" target="_blank" class="btn-primary-gold" style="width: 100%; text-align: center; font-size: 0.85rem; padding: 10px;">
+          <i class="fa-brands fa-whatsapp"></i> Chat on WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page Banner -->
+  <section class="page-banner">
+    <div class="container">
+      <h1 class="page-banner-title">ABOUT KAIZEN HUB</h1>
+      <div class="breadcrumbs">
+        <a href="index.html">Home</a> <span>/</span> <strong style="color: var(--gold-light);">About Us</strong>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Content Section -->
+  <section class="container" style="padding: 60px 20px;">
+    <!-- Story Hero -->
+    <div class="about-hero">
+      <div class="about-text">
+        <div class="hero-tag" style="margin-bottom: 12px;"><i class="fa-solid fa-crown"></i> Our Heritage & Vision</div>
+        <h2 style="font-family: var(--font-serif); font-size: 2rem; color: var(--gold-light); margin-bottom: 16px; line-height: 1.25;">Crafting Elegance for Every Cherished Moment</h2>
+        <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.7; margin-bottom: 16px;">
+          Rooted in the cultural vibrancy of <strong>Tamil Nadu, India</strong>, <strong>Kaizen Hub</strong> was established with a singular vision: to bridge timeless Indian textile artistry with contemporary fashion convenience.
+        </p>
+        <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.7; margin-bottom: 24px;">
+          From opulent pure silk Banarasi & Kanjivaram sarees to breathable daily kurtis and sparkling kids party frocks, each piece in our collection is carefully curated for quality weaving, rich zari detailing, and flattering fits.
+        </p>
+        <a href="shop.html" class="btn-primary-gold">
+          EXPLORE SHOP COLLECTION <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </div>
+      <div class="about-image">
+        <img src="images/about_story.jpg" alt="Kaizen Hub Heritage Story" />
+      </div>
+    </div>
+
+    <!-- Craftsmanship Showcase -->
+    <div class="about-hero" style="margin-top: 50px; flex-direction: row-reverse;">
+      <div class="about-text">
+        <div class="hero-tag" style="margin-bottom: 12px;"><i class="fa-solid fa-wand-magic-sparkles"></i> Handloom Masterpieces</div>
+        <h2 style="font-family: var(--font-serif); font-size: 2rem; color: var(--gold-light); margin-bottom: 16px; line-height: 1.25;">Artisan Weaving & Direct Handcraft</h2>
+        <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.7; margin-bottom: 16px;">
+          Every thread is spun with dedication. We partner directly with master weavers and boutique ateliers across South India and Banaras, eliminating middlemen markups and ensuring you get authentic luxury at fair pricing.
+        </p>
+        <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.7; margin-bottom: 24px;">
+          With direct WhatsApp ordering, you get real-time video verification, fabric advice, custom blouse tailoring options, and transparent doorstep tracking.
+        </p>
+        <a href="https://wa.me/919789975490?text=Hello%20Kaizen%20Hub,%20I%20would%20like%20to%20know%20more%20about%20your%20fabrics." target="_blank" class="btn-secondary-outline">
+          <i class="fa-brands fa-whatsapp"></i> Chat With Our Stylist
+        </a>
+      </div>
+      <div class="about-image">
+        <img src="images/about_craft.jpg" alt="Kaizen Hub Artisan Craftsmanship" />
+      </div>
+    </div>
+
+    <!-- 4 Pillars of Excellence -->
+    <div style="text-align: center; margin-top: 60px;">
+      <div class="section-ornament">
+        <div class="ornament-line"></div>
+        <i class="fa-solid fa-gem" style="color: var(--gold-primary); font-size: 0.9rem;"></i>
+        <div class="ornament-line right"></div>
+      </div>
+      <h2 class="section-title">THE KAIZEN PROMISE</h2>
+      <p class="section-subtitle">What sets our ethnic experience apart</p>
+    </div>
+
+    <div class="about-pillars">
+      <div class="pillar-card">
+        <i class="fa-solid fa-wand-magic-sparkles pillar-icon"></i>
+        <h3 style="font-family: var(--font-serif); font-size: 1.15rem; color: var(--gold-light); margin-bottom: 8px;">Pure Craftsmanship</h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">Handcrafted zari motifs, pure soft silk, and breathable cambric fabrics directly from skilled weavers.</p>
+      </div>
+
+      <div class="pillar-card">
+        <i class="fa-brands fa-whatsapp pillar-icon" style="color: var(--whatsapp-green);"></i>
+        <h3 style="font-family: var(--font-serif); font-size: 1.15rem; color: var(--gold-light); margin-bottom: 8px;">Direct WhatsApp Service</h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">Personalized styling consultation, live unboxing previews, and prompt human customer support.</p>
+      </div>
+
+      <div class="pillar-card">
+        <i class="fa-solid fa-magnifying-glass-chart pillar-icon"></i>
+        <h3 style="font-family: var(--font-serif); font-size: 1.15rem; color: var(--gold-light); margin-bottom: 8px;">100% Quality Checked</h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">Every saree and kurti is hand-inspected for weaving perfection, color fastness, and embellishments before dispatch.</p>
+      </div>
+
+      <div class="pillar-card">
+        <i class="fa-solid fa-truck-fast pillar-icon"></i>
+        <h3 style="font-family: var(--font-serif); font-size: 1.15rem; color: var(--gold-light); margin-bottom: 8px;">Safe & Fast Delivery</h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">Express shipping across Tamil Nadu & all over India with transparent tracking updates sent to your WhatsApp.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Footer -->
+  <footer class="main-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <a href="index.html" class="brand-logo" style="margin-bottom: 16px; display: inline-block;">
+            <img src="images/logo.png" alt="Kaizen Hub Logo" class="brand-logo-footer-img" />
+          </a>
+          <p>Your premier destination for luxury sarees, designer kurtis, 3-piece sets, kids festive wear, and dress materials. Exceptional quality, elegant style & hassle-free WhatsApp ordering.</p>
+          <div class="social-icons-top">
+            <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href="#"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#"><i class="fa-brands fa-youtube"></i></a>
+            <a href="https://wa.me/919789975490" target="_blank"><i class="fa-brands fa-whatsapp"></i></a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h3>QUICK LINKS</h3>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="shop.html">Shop All Collections</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+            <li><a href="shop.html?category=offers">Special Offers & Deals</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h3>CATEGORIES (IN SHOP)</h3>
+          <ul class="footer-links">
+            <li><a href="shop.html?category=sarees">Silk & Heritage Sarees</a></li>
+            <li><a href="shop.html?category=kids">Kids Collection</a></li>
+            <li><a href="shop.html?category=kurtis">Designer Kurtis</a></li>
+            <li><a href="shop.html?category=3piece">3-Piece Festive Sets</a></li>
+            <li><a href="shop.html?category=dressmaterials">Dress Materials</a></li>
+            <li><a href="shop.html?category=women">Women's Fashion</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h3>CONTACT US</h3>
+          <div class="footer-contact-item">
+            <i class="fa-brands fa-whatsapp"></i>
+            <div>
+              <strong>WhatsApp Ordering:</strong><br />
+              <a href="https://wa.me/919789975490" target="_blank" style="color: var(--gold-light); text-decoration: none;">+91 9789975490</a>
+            </div>
+          </div>
+          <div class="footer-contact-item">
+            <i class="fa-regular fa-envelope"></i>
+            <div>
+              <strong>Email:</strong><br />
+              <a href="mailto:hubkaizen95@gmail.com" style="color: var(--gold-light); text-decoration: none;">hubkaizen95@gmail.com</a>
+            </div>
+          </div>
+          <div class="footer-contact-item">
+            <i class="fa-solid fa-location-dot"></i>
+            <div>
+              <strong>Location:</strong><br />
+              <span>Tamil Nadu, India</span>
+            </div>
+          </div>
+
+          <div class="footer-wa-box">
+            <h5>100% WhatsApp Ordering</h5>
+            <p>No Online Payment Hassle • Direct Chat</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2026 Kaizen Hub. All Rights Reserved.</p>
+        <div>
+          <a href="about.html">About Us</a>
+          <a href="contact.html">Contact Us</a>
+          <a href="shop.html">Shop</a>
+          <a href="admin.html" style="color: rgba(212, 175, 55, 0.6);"><i class="fa-solid fa-lock" style="font-size: 0.75rem;"></i> Admin</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Floating WhatsApp Action Button -->
+  <a href="https://wa.me/919789975490?text=Hello%20Kaizen%20Hub,%20I%20would%20like%20to%20order%20products." target="_blank" class="floating-wa-btn" aria-label="Direct WhatsApp Order">
+    <i class="fa-brands fa-whatsapp"></i>
+  </a>
+
+  <!-- Cart / Order List Drawer -->
+  <div id="cart-drawer-overlay" class="cart-drawer-overlay">
+    <div class="cart-drawer">
+      <div class="cart-header">
+        <h3><i class="fa-solid fa-basket-shopping" style="color: var(--gold-primary); margin-right: 8px;"></i> WhatsApp Order List</h3>
+        <button id="close-cart-btn" class="modal-close-btn" style="position: static;" aria-label="Close cart">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div id="cart-items-container" class="cart-items-container"></div>
+
+      <div class="cart-footer">
+        <div class="cart-subtotal-row">
+          <span>Subtotal:</span>
+          <span id="cart-subtotal">₹0</span>
+        </div>
+
+        <div class="cart-customer-inputs">
+          <input type="text" id="checkout-name" class="cart-input" placeholder="Your Full Name" />
+          <input type="text" id="checkout-phone" class="cart-input" placeholder="Your WhatsApp Contact Number" />
+          <input type="text" id="checkout-address" class="cart-input" placeholder="Delivery Address & Pincode" />
+        </div>
+
+        <button id="btn-checkout-wa" class="btn-checkout-wa">
+          <i class="fa-brands fa-whatsapp" style="font-size: 1.2rem;"></i> CONFIRM ORDER ON WHATSAPP
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast-box">
+    <i class="fa-solid fa-circle-check" style="color: var(--gold-primary);"></i>
+    <span id="toast-text">Item added to order list!</span>
+  </div>
+
+  <!-- JavaScript -->
+  <script src="app.js"></script>
+</body>
+</html>
