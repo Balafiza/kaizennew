@@ -1,0 +1,8 @@
+{
+  "name": "kaizen-hub",
+  "version": "1.0.0",
+  "description": "Kaizen Hub - Luxury Ethnic Wear E-Commerce Platform",
+  "scripts": {
+    "dev": "node server.js"
+  }
+}
