@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Portal | Kaizen Hub - Store & Order Management</title>
+  <meta name="description" content="Official Kaizen Hub Admin Portal for managing products, WhatsApp orders, categories, and store configuration." />
+  <link rel="icon" type="image/jpeg" href="images/logo.jpg" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet" />
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Supabase JS Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body style="background: #09090d; color: var(--text-main);">
+
+  <!-- Admin PIN Security Gate -->
+  <div id="admin-lock-screen" class="admin-lock-screen">
+    <div class="admin-lock-card">
+      <div class="admin-lock-icon">
+        <i class="fa-solid fa-shield-halved"></i>
+      </div>
+      <img src="images/logo.png" alt="Kaizen Hub" style="height: 60px; object-fit: contain; margin-bottom: 16px;" />
+      <h2 style="font-family: var(--font-serif); font-size: 1.4rem; color: var(--gold-light); margin-bottom: 6px;">ADMIN ACCESS PORTAL</h2>
+      <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 24px;">Enter your Admin PIN to manage products & WhatsApp orders.</p>
+
+      <div style="position: relative; margin-bottom: 16px;">
+        <input type="password" id="admin-pin-input" class="form-input" placeholder="Enter Admin Password / PIN" style="text-align: center; letter-spacing: 2px; font-size: 1.1rem; padding: 12px; font-weight: 600;" />
+      </div>
+
+      <div id="admin-unlock-error" style="display: none; color: #f87171; font-size: 0.85rem; margin-bottom: 14px; background: rgba(239, 68, 68, 0.1); padding: 8px; border-radius: var(--radius-sm); border: 1px solid rgba(239, 68, 68, 0.3);"></div>
+
+      <button id="btn-admin-unlock" onclick="handleAdminLogin()" class="btn-primary-gold" style="width: 100%; justify-content: center; padding: 14px; font-size: 1rem; cursor: pointer;">
+        <i class="fa-solid fa-lock-open"></i> UNLOCK ADMIN PANEL
+      </button>
+
+      <div style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 15px;">
+        <a href="index.html" style="color: var(--text-dim); font-size: 0.8rem; text-decoration: none;">
+          <i class="fa-solid fa-arrow-left"></i> Return to Live Store
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Admin Top Bar (Visible only on screens <= 900px) -->
+  <header class="admin-mobile-header">
+    <button id="btn-admin-mobile-menu" class="btn-mobile-menu" aria-label="Open Admin Menu">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <img src="images/logo.png" alt="Kaizen Hub" style="height: 36px; object-fit: contain;" />
+      <span class="admin-badge-role">ADMIN</span>
+    </div>
+
+    <a href="shop.html" target="_blank" class="btn-action-icon" title="View Shop" style="color: var(--gold-light);">
+      <i class="fa-solid fa-arrow-up-right-from-square"></i>
+    </a>
+  </header>
+
+  <!-- Mobile Admin Drawer Overlay -->
+  <div id="admin-mobile-drawer-overlay" class="mobile-nav-overlay">
+    <div class="mobile-nav-drawer">
+      <div class="mobile-nav-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <img src="images/logo.png" alt="Kaizen Hub Logo" style="height: 40px; object-fit: contain;" />
+          <span class="admin-badge-role">STORE ADMIN</span>
+        </div>
+        <button id="close-admin-mobile-drawer" class="modal-close-btn" style="position: static;" aria-label="Close menu">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <ul class="admin-nav-menu" style="flex: 1;">
+        <li>
+          <a href="#" class="admin-nav-item active" data-tab="dashboard">
+            <i class="fa-solid fa-chart-pie"></i>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="admin-nav-item" data-tab="products">
+            <i class="fa-solid fa-bag-shopping"></i>
+            <span>Products Catalog</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="admin-nav-item" data-tab="orders">
+            <i class="fa-brands fa-whatsapp"></i>
+            <span>WhatsApp Orders</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="admin-nav-item" data-tab="categories">
+            <i class="fa-solid fa-layer-group"></i>
+            <span>Categories</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="admin-nav-item" data-tab="hero">
+            <i class="fa-solid fa-images"></i>
+            <span>Hero Banners</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="admin-nav-item" data-tab="settings">
+            <i class="fa-solid fa-sliders"></i>
+            <span>Store Settings</span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="admin-sidebar-footer" style="margin-top: auto; padding-top: 15px;">
+        <a href="shop.html" target="_blank" class="btn-secondary-outline" style="font-size: 0.8rem; padding: 10px; justify-content: center; width: 100%;">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Live Shop
+        </a>
+        <button onclick="sessionStorage.removeItem('kaizen_admin_auth'); localStorage.removeItem('kaizen_admin_auth'); location.reload();" class="btn-action-icon" style="width: 100%; height: 42px; border-radius: var(--radius-sm); font-size: 0.85rem; gap: 8px;">
+          <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Main Workspace Layout -->
+  <div class="admin-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="admin-sidebar">
+      <div class="admin-brand">
+        <img src="images/logo.png" alt="Kaizen Hub Logo" style="height: 48px; object-fit: contain;" />
+        <div>
+          <span class="admin-badge-role">STORE ADMIN</span>
+        </div>
+      </div>
+
+      <ul class="admin-nav-menu">
+        <li>
+          <a href="#" class="admin-nav-item active" data-tab="dashboard">
+            <i class="fa-solid fa-chart-pie"></i>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="admin-nav-item" data-tab="products">
+            <i class="fa-solid fa-bag-shopping"></i>
+            <span>Products Catalog</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="admin-nav-item" data-tab="orders">
+            <i class="fa-brands fa-whatsapp"></i>
+            <span>WhatsApp Orders</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="admin-nav-item" data-tab="categories">
+            <i class="fa-solid fa-layer-group"></i>
+            <span>Categories</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="admin-nav-item" data-tab="hero">
+            <i class="fa-solid fa-images"></i>
+            <span>Hero Banners</span>
+          </a>
+        </li>
+        <li>
+          <a href="#" class="admin-nav-item" data-tab="settings">
+            <i class="fa-solid fa-sliders"></i>
+            <span>Store Settings</span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="admin-sidebar-footer">
+        <a href="shop.html" target="_blank" class="btn-secondary-outline" style="font-size: 0.8rem; padding: 8px 12px; justify-content: center; width: 100%;">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Live Shop
+        </a>
+        <button onclick="sessionStorage.removeItem('kaizen_admin_auth'); localStorage.removeItem('kaizen_admin_auth'); location.reload();" class="btn-action-icon" style="width: 100%; border-radius: var(--radius-sm); font-size: 0.8rem; gap: 8px;">
+          <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Panels -->
+    <main class="admin-main">
+      
+      <!-- ============================================ -->
+      <!-- TAB 1: DASHBOARD -->
+      <!-- ============================================ -->
+      <section id="tab-dashboard" class="admin-tab-content">
+        <div class="admin-top-bar">
+          <div class="admin-page-heading">
+            <h1>STORE OVERVIEW</h1>
+            <p>Welcome back to Kaizen Hub Management System</p>
+          </div>
+          <button onclick="openAddProductModal()" class="btn-primary-gold">
+            <i class="fa-solid fa-plus"></i> ADD NEW OUTFIT
+          </button>
+        </div>
+
+        <!-- Metric Stat Cards -->
+        <div class="admin-stat-grid">
+          <div class="admin-stat-card">
+            <div class="admin-stat-icon"><i class="fa-solid fa-shirt"></i></div>
+            <div>
+              <div id="stat-total-products" class="admin-stat-number">8</div>
+              <div class="admin-stat-label">Total Outfits</div>
+            </div>
+          </div>
+
+          <div class="admin-stat-card">
+            <div class="admin-stat-icon" style="color: #4ade80; background: rgba(34, 197, 94, 0.1);"><i class="fa-solid fa-circle-check"></i></div>
+            <div>
+              <div id="stat-in-stock" class="admin-stat-number">8</div>
+              <div class="admin-stat-label">In Stock Items</div>
+            </div>
+          </div>
+
+          <div class="admin-stat-card">
+            <div class="admin-stat-icon" style="color: var(--whatsapp-green); background: rgba(37, 211, 102, 0.1);"><i class="fa-brands fa-whatsapp"></i></div>
+            <div>
+              <div id="stat-total-orders" class="admin-stat-number">0</div>
+              <div class="admin-stat-label">WhatsApp Inquiries</div>
+            </div>
+          </div>
+
+          <div class="admin-stat-card">
+            <div class="admin-stat-icon"><i class="fa-solid fa-indian-rupee-sign"></i></div>
+            <div>
+              <div id="stat-total-revenue" class="admin-stat-number">₹0</div>
+              <div class="admin-stat-label">Estimated Orders Total</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent WhatsApp Orders -->
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <div class="admin-card-title">
+              <i class="fa-brands fa-whatsapp" style="color: var(--whatsapp-green);"></i> Recent WhatsApp Orders
+            </div>
+            <a href="#" onclick="document.querySelector('[data-tab=orders]').click()" style="color: var(--gold-light); font-size: 0.85rem; text-decoration: none;">
+              View All Orders <i class="fa-solid fa-arrow-right"></i>
+            </a>
+          </div>
+
+          <div class="admin-table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Date</th>
+                  <th>Customer Info</th>
+                  <th>Total Amount</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="admin-recent-orders-tbody">
+                <!-- Populated by app.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================ -->
+      <!-- TAB 2: PRODUCTS CATALOG -->
+      <!-- ============================================ -->
+      <section id="tab-products" class="admin-tab-content" style="display: none;">
+        <div class="admin-top-bar">
+          <div class="admin-page-heading">
+            <h1>PRODUCTS CATALOG</h1>
+            <p>Add, edit, or manage your outfits, stock status & prices</p>
+          </div>
+          <button onclick="openAddProductModal()" class="btn-primary-gold">
+            <i class="fa-solid fa-plus"></i> ADD NEW OUTFIT
+          </button>
+        </div>
+
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+              <select id="admin-filter-category" class="shop-sort-select">
+                <option value="all">All Categories</option>
+                <option value="sarees">Sarees</option>
+                <option value="kids">Kids Collection</option>
+                <option value="kurtis">Kurtis</option>
+                <option value="3piece">3-Piece Sets</option>
+                <option value="dressmaterials">Dress Materials</option>
+                <option value="women">Women's Fashion</option>
+              </select>
+
+              <div class="search-wrapper" style="width: 260px;">
+                <i class="fa-solid fa-magnifying-glass" style="color: var(--gold-primary); font-size: 0.85rem;"></i>
+                <input type="text" id="admin-search-products" class="search-input" placeholder="Search by name or code..." />
+              </div>
+            </div>
+
+            <div>
+              <button onclick="resetProductsToDefault()" id="btn-reset-catalog" class="btn-secondary-outline" style="font-size: 0.8rem; padding: 8px 14px;">
+                <i class="fa-solid fa-rotate-left"></i> Reset to Factory Default
+              </button>
+            </div>
+          </div>
+
+          <div class="admin-table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Photo</th>
+                  <th>Product Details</th>
+                  <th>Code / SKU</th>
+                  <th>Category</th>
+                  <th>Price</th>
+                  <th>Stock Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="admin-products-tbody">
+                <!-- Populated by app.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================ -->
+      <!-- TAB 3: WHATSAPP ORDERS -->
+      <!-- ============================================ -->
+      <section id="tab-orders" class="admin-tab-content" style="display: none;">
+        <div class="admin-top-bar">
+          <div class="admin-page-heading">
+            <h1>WHATSAPP ORDERS & INQUIRIES</h1>
+            <p>Track all customer orders initiated via Cart and Direct WhatsApp buttons</p>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <div class="admin-card-title">
+              <i class="fa-brands fa-whatsapp" style="color: var(--whatsapp-green);"></i> Order Tracker
+            </div>
+          </div>
+
+          <div class="admin-table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Date & Time</th>
+                  <th>Customer Info</th>
+                  <th>Ordered Outfits</th>
+                  <th>Total Amount</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="admin-orders-full-tbody">
+                <!-- Populated by app.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================ -->
+      <!-- TAB 4: CATEGORIES -->
+      <!-- ============================================ -->
+      <section id="tab-categories" class="admin-tab-content" style="display: none;">
+        <div class="admin-top-bar">
+          <div class="admin-page-heading">
+            <h1>STORE CATEGORIES</h1>
+            <p>Add, edit, or manage product categories for your store</p>
+          </div>
+          <button onclick="openAddCategoryModal()" class="btn-primary-gold">
+            <i class="fa-solid fa-plus"></i> ADD NEW CATEGORY
+          </button>
+        </div>
+
+        <!-- Dynamic Category Cards Grid -->
+        <div class="admin-category-grid" id="admin-categories-grid">
+          <!-- Rendered dynamically by app.js -->
+        </div>
+      </section>
+
+      <!-- ============================================ -->
+      <!-- TAB: HERO BANNERS MANAGEMENT -->
+      <!-- ============================================ -->
+      <section id="tab-hero" class="admin-tab-content" style="display: none;">
+        <div class="admin-top-bar">
+          <div class="admin-page-heading">
+            <h1>HOMEPAGE HERO BANNERS</h1>
+            <p>Add, edit, or remove slideshow hero banners featured on your main homepage</p>
+          </div>
+          <button onclick="openAddHeroModal()" class="btn-primary-gold">
+            <i class="fa-solid fa-plus"></i> ADD NEW HERO BANNER
+          </button>
+        </div>
+
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <div class="admin-card-title">
+              <i class="fa-solid fa-images" style="color: var(--gold-primary);"></i> Active Homepage Hero Slideshow
+            </div>
+            <button onclick="resetHeroSlidesToDefault()" class="btn-secondary-outline" style="font-size: 0.8rem; padding: 6px 12px;">
+              <i class="fa-solid fa-rotate-left"></i> Reset Banners to Default
+            </button>
+          </div>
+
+          <div class="admin-table-wrapper">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Banner Preview</th>
+                  <th>Badge Tag</th>
+                  <th>Main Title</th>
+                  <th>Subtitle Description</th>
+                  <th>Button Link</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="admin-hero-tbody">
+                <!-- Populated dynamically by app.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================ -->
+      <!-- TAB 5: STORE SETTINGS -->
+      <!-- ============================================ -->
+      <section id="tab-settings" class="admin-tab-content" style="display: none;">
+        <div class="admin-top-bar">
+          <div class="admin-page-heading">
+            <h1>A-TO-Z STORE SETTINGS & CONTROLS</h1>
+            <p>Control website branding, WhatsApp numbers, announcement bar, contact info & security PIN</p>
+          </div>
+        </div>
+
+        <div class="admin-card" style="max-width: 850px;">
+          <form id="admin-settings-form">
+            <h3 style="font-family: var(--font-serif); font-size: 1.1rem; color: var(--gold-light); margin-bottom: 16px; border-bottom: 1px solid var(--gold-border); padding-bottom: 8px;">
+              <i class="fa-solid fa-store"></i> Store Identity & Branding
+            </h3>
+
+            <div class="admin-form-grid">
+              <div class="form-group">
+                <label class="form-label" for="setting-store-name">Store Name *</label>
+                <input type="text" id="setting-store-name" class="form-input" value="Kaizen Hub" required />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="setting-tagline">Store Tagline / Subtitle *</label>
+                <input type="text" id="setting-tagline" class="form-input" value="Elevate Your Style" required />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="setting-currency">Currency Symbol *</label>
+                <input type="text" id="setting-currency" class="form-input" value="₹" required />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="setting-location">Store Location / City</label>
+                <input type="text" id="setting-location" class="form-input" value="Tamil Nadu, India" required />
+              </div>
+            </div>
+
+            <h3 style="font-family: var(--font-serif); font-size: 1.1rem; color: var(--gold-light); margin-top: 24px; margin-bottom: 16px; border-bottom: 1px solid var(--gold-border); padding-bottom: 8px;">
+              <i class="fa-brands fa-whatsapp" style="color: var(--whatsapp-green);"></i> Official Contact & WhatsApp Channels
+            </h3>
+
+            <div class="admin-form-grid">
+              <div class="form-group">
+                <label class="form-label" for="setting-wa-number">Official WhatsApp Number (Without + or spaces) *</label>
+                <input type="text" id="setting-wa-number" class="form-input" value="919500527490" required />
+                <small style="color: var(--text-dim); font-size: 0.75rem;">Orders will be dispatched to this WhatsApp number: e.g. 919500527490</small>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="setting-display-phone">Display Phone Number (Formatted)</label>
+                <input type="text" id="setting-display-phone" class="form-input" value="+91 9500527490" required />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="setting-email">Official Store Email *</label>
+                <input type="email" id="setting-email" class="form-input" value="hubkaizen95@gmail.com" required />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="setting-location">Store Location / Address</label>
+                <input type="text" id="setting-location" class="form-input" value="Tamil Nadu, India" required />
+              </div>
+            </div>
+
+            <h3 style="font-family: var(--font-serif); font-size: 1.1rem; color: var(--gold-light); margin-top: 24px; margin-bottom: 16px; border-bottom: 1px solid var(--gold-border); padding-bottom: 8px;">
+              <i class="fa-solid fa-lock" style="color: var(--gold-primary);"></i> Change Admin Password / Security PIN
+            </h3>
+
+            <div class="admin-form-grid">
+              <div class="form-group">
+                <label class="form-label" for="setting-admin-pin">New Admin Password / PIN *</label>
+                <input type="text" id="setting-admin-pin" class="form-input" placeholder="e.g. mysecret2026" value="kaizen2026" required />
+                <small style="color: var(--text-dim); font-size: 0.75rem;">Use this new password/PIN to log in to Admin Portal next time</small>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="setting-admin-pin-confirm">Confirm New Password / PIN *</label>
+                <input type="text" id="setting-admin-pin-confirm" class="form-input" placeholder="Re-type new PIN" value="kaizen2026" required />
+              </div>
+            </div>
+
+            <div style="margin-top: 28px; display: flex; gap: 14px; flex-wrap: wrap;">
+              <button type="submit" class="btn-primary-gold" style="padding: 12px 24px;">
+                <i class="fa-solid fa-floppy-disk"></i> SAVE ALL STORE SETTINGS & PIN
+              </button>
+
+              <button type="button" onclick="resetAllStoreData()" class="btn-secondary-outline" style="border-color: #ef4444; color: #ef4444;">
+                <i class="fa-solid fa-triangle-exclamation"></i> Factory Reset Website
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Add / Edit Product Modal -->
+  <div id="admin-product-modal" class="modal-overlay">
+    <div class="modal-card" style="max-width: 720px;">
+      <button class="modal-close-btn" onclick="closeAdminModal()" aria-label="Close modal">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <h2 id="admin-modal-title" style="font-family: var(--font-serif); font-size: 1.5rem; color: var(--gold-light); margin-bottom: 20px;">
+        ADD NEW OUTFIT TO CATALOG
+      </h2>
+
+      <form id="admin-product-form">
+        <input type="hidden" id="modal-product-id" />
+
+        <div class="admin-form-grid">
+          <div class="form-group">
+            <label class="form-label" for="modal-product-title">Outfit Title *</label>
+            <input type="text" id="modal-product-title" class="form-input" placeholder="e.g. Royal Banarasi Silk Saree" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="modal-product-code">Product Code / SKU *</label>
+            <input type="text" id="modal-product-code" class="form-input" placeholder="e.g. KS105" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="modal-product-category">Category *</label>
+            <select id="modal-product-category" class="shop-sort-select" style="width: 100%;" required>
+              <option value="sarees">Sarees</option>
+              <option value="kids">Kids Collection</option>
+              <option value="kurtis">Kurtis</option>
+              <option value="3piece">3-Piece Sets</option>
+              <option value="dressmaterials">Dress Materials</option>
+              <option value="women">Women's Fashion</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="modal-product-badge">Badge (Optional)</label>
+            <input type="text" id="modal-product-badge" class="form-input" placeholder="e.g. New Arrival / Bestseller" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="modal-product-price">Selling Price (₹) *</label>
+            <input type="number" id="modal-product-price" class="form-input" placeholder="e.g. 2499" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="modal-product-original-price">Original Price (₹)</label>
+            <input type="number" id="modal-product-original-price" class="form-input" placeholder="e.g. 3499" />
+          </div>
+
+          <div class="form-group full-width">
+            <label class="form-label" style="display: flex; justify-content: space-between; align-items: center;">
+              <span>Product Outfit Photos (Upload at least 3 Pictures) *</span>
+              <span style="font-size: 0.75rem; color: var(--gold-light);">Multi-Angle Showcase</span>
+            </label>
+
+            <!-- 3 Dedicated Image Slots Grid -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin-top: 6px;">
+              <!-- Slot 1: Main Photo -->
+              <div class="image-upload-dropzone" style="padding: 14px 10px; min-height: 120px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <input type="file" id="modal-product-file-1" accept="image/*" onchange="handleSingleSlotUpload(event, 0)" />
+                <div class="upload-dropzone-content" style="gap: 4px;">
+                  <i class="fa-solid fa-camera upload-dropzone-icon" style="font-size: 1.4rem;"></i>
+                  <span style="font-size: 0.8rem; font-weight: 700; color: #fff;">Photo 1 (Front)</span>
+                  <span style="font-size: 0.65rem; color: var(--gold-primary);">Main Display *</span>
+                </div>
+              </div>
+
+              <!-- Slot 2: Angle/Detail Photo -->
+              <div class="image-upload-dropzone" style="padding: 14px 10px; min-height: 120px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <input type="file" id="modal-product-file-2" accept="image/*" onchange="handleSingleSlotUpload(event, 1)" />
+                <div class="upload-dropzone-content" style="gap: 4px;">
+                  <i class="fa-solid fa-camera upload-dropzone-icon" style="font-size: 1.4rem;"></i>
+                  <span style="font-size: 0.8rem; font-weight: 700; color: #fff;">Photo 2 (Side/Detail)</span>
+                  <span style="font-size: 0.65rem; color: var(--text-dim);">Close-up / Work</span>
+                </div>
+              </div>
+
+              <!-- Slot 3: Back/Fabric Photo -->
+              <div class="image-upload-dropzone" style="padding: 14px 10px; min-height: 120px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <input type="file" id="modal-product-file-3" accept="image/*" onchange="handleSingleSlotUpload(event, 2)" />
+                <div class="upload-dropzone-content" style="gap: 4px;">
+                  <i class="fa-solid fa-camera upload-dropzone-icon" style="font-size: 1.4rem;"></i>
+                  <span style="font-size: 0.8rem; font-weight: 700; color: #fff;">Photo 3 (Back/Full)</span>
+                  <span style="font-size: 0.65rem; color: var(--text-dim);">Pallu / Fabric</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Multi-Image Preview Container Grid -->
+            <div id="product-multi-images-grid" class="multi-image-preview-grid" style="margin-top: 14px;"></div>
+
+            <!-- Direct Path or URLs Alternative -->
+            <div style="margin-top: 10px;">
+              <label style="font-size: 0.75rem; color: var(--text-dim);">Or enter comma-separated image URLs / file paths:</label>
+              <input type="text" id="modal-product-image" class="form-input" placeholder="e.g. images/saree_silk_green.jpg, images/saree_banarasi_red.jpg" />
+            </div>
+          </div>
+
+          <div class="form-group full-width">
+            <label class="form-label" for="modal-product-desc">Product Description *</label>
+            <textarea id="modal-product-desc" class="form-textarea" rows="3" placeholder="Describe the design, craftsmanship, and fit..." required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="modal-product-fabric">Fabric Details</label>
+            <input type="text" id="modal-product-fabric" class="form-input" placeholder="e.g. Pure Soft Silk with Zari" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="modal-product-length">Length / Size Spec</label>
+            <input type="text" id="modal-product-length" class="form-input" placeholder="e.g. 6.3m with blouse piece" />
+          </div>
+
+          <div class="form-group full-width">
+            <label class="form-label" for="modal-product-work">Work / Pattern</label>
+            <input type="text" id="modal-product-work" class="form-input" placeholder="e.g. Antique Gold Zari Weave" />
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 14px; margin-top: 24px; justify-content: flex-end;">
+          <button type="button" class="btn-secondary-outline" onclick="closeAdminModal()">Cancel</button>
+          <button type="submit" class="btn-primary-gold">
+            <i class="fa-solid fa-check"></i> SAVE OUTFIT
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add / Edit Category Modal -->
+  <div id="admin-category-modal" class="modal-overlay">
+    <div class="modal-card" style="max-width: 600px;">
+      <button class="modal-close-btn" onclick="closeAdminCategoryModal()" aria-label="Close modal">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <h2 id="admin-category-modal-title" style="font-family: var(--font-serif); font-size: 1.5rem; color: var(--gold-light); margin-bottom: 20px;">
+        ADD NEW CATEGORY
+      </h2>
+
+      <form id="admin-category-form">
+        <input type="hidden" id="modal-category-is-new" value="true" />
+
+        <div class="admin-form-grid">
+          <div class="form-group">
+            <label class="form-label" for="modal-category-name">Category Name *</label>
+            <input type="text" id="modal-category-name" class="form-input" placeholder="e.g. Designer Lehengas" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="modal-category-id">Category Code / Slug ID *</label>
+            <input type="text" id="modal-category-id" class="form-input" placeholder="e.g. lehengas" required />
+            <small style="color: var(--text-dim); font-size: 0.75rem;">Unique URL slug (e.g. sarees, kurtis, lehengas)</small>
+          </div>
+
+          <div class="form-group full-width">
+            <label class="form-label" for="modal-category-tagline">Short Description / Tagline *</label>
+            <input type="text" id="modal-category-tagline" class="form-input" placeholder="e.g. Bridal & Festive Embroidered Lehengas" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="modal-category-icon">FontAwesome Icon Class</label>
+            <input type="text" id="modal-category-icon" class="form-input" placeholder="e.g. fa-gem, fa-crown, fa-shirt" value="fa-gem" />
+          </div>
+
+          <div class="form-group full-width">
+            <label class="form-label">Category Banner Image</label>
+            <div class="image-upload-wrapper">
+              <div class="image-upload-dropzone" id="category-dropzone">
+                <input type="file" id="modal-category-file" accept="image/*" />
+                <div class="upload-dropzone-content">
+                  <i class="fa-solid fa-cloud-arrow-up upload-dropzone-icon"></i>
+                  <span class="upload-dropzone-text">Upload category banner photo</span>
+                  <span class="upload-dropzone-subtext">Click or Drag & Drop from computer/phone</span>
+                </div>
+              </div>
+
+              <!-- Instant Preview Box -->
+              <div id="category-image-preview-box" class="image-upload-preview-container">
+                <img id="category-preview-img" class="image-upload-preview-img" src="" alt="Category Preview" />
+                <button type="button" class="btn-remove-preview" onclick="clearCategoryImageUpload()" title="Remove / Change Photo">
+                  <i class="fa-solid fa-xmark"></i>
+                </button>
+              </div>
+
+              <div style="margin-top: 6px;">
+                <label style="font-size: 0.75rem; color: var(--text-dim);">Or enter local path / web image URL:</label>
+                <input type="text" id="modal-category-image" class="form-input" placeholder="e.g. images/cat_women.jpg or https://..." />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 14px; margin-top: 24px; justify-content: flex-end;">
+          <button type="button" class="btn-secondary-outline" onclick="closeAdminCategoryModal()">Cancel</button>
+          <button type="submit" class="btn-primary-gold">
+            <i class="fa-solid fa-check"></i> SAVE CATEGORY
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add / Edit Hero Banner Modal -->
+  <div id="admin-hero-modal" class="modal-overlay">
+    <div class="modal-card" style="max-width: 680px;">
+      <button class="modal-close-btn" onclick="closeAdminHeroModal()" aria-label="Close modal">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <h2 id="admin-hero-modal-title" style="font-family: var(--font-serif); font-size: 1.5rem; color: var(--gold-light); margin-bottom: 20px;">
+        ADD NEW HOMEPAGE HERO BANNER
+      </h2>
+
+      <form id="admin-hero-form">
+        <input type="hidden" id="modal-hero-id" />
+
+        <div class="admin-form-grid">
+          <div class="form-group">
+            <label class="form-label" for="modal-hero-tag">Badge / Tagline *</label>
+            <input type="text" id="modal-hero-tag" class="form-input" placeholder="e.g. Handcrafted Silk Sarees" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="modal-hero-icon">Badge Icon Class</label>
+            <input type="text" id="modal-hero-icon" class="form-input" placeholder="e.g. fa-crown, fa-gem, fa-star" value="fa-crown" />
+          </div>
+
+          <div class="form-group full-width">
+            <label class="form-label" for="modal-hero-title">Main Banner Headline *</label>
+            <input type="text" id="modal-hero-title" class="form-input" placeholder="e.g. TIMELESS ELEGANCE CRAFTED FOR YOU" required />
+          </div>
+
+          <div class="form-group full-width">
+            <label class="form-label" for="modal-hero-subtitle">Subtitle Description *</label>
+            <textarea id="modal-hero-subtitle" class="form-textarea" rows="2" placeholder="e.g. Pure Kanjivaram, Banarasi & Soft Silk Sarees with rich antique zari borders..." required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="modal-hero-btn-text">Button Text *</label>
+            <input type="text" id="modal-hero-btn-text" class="form-input" placeholder="e.g. EXPLORE SAREES" value="EXPLORE COLLECTION" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="modal-hero-btn-link">Button Target Link *</label>
+            <input type="text" id="modal-hero-btn-link" class="form-input" placeholder="e.g. shop.html?category=sarees" value="shop.html" required />
+          </div>
+
+          <div class="form-group full-width">
+            <label class="form-label">Banner Background Image *</label>
+            <div class="image-upload-wrapper">
+              <div class="image-upload-dropzone" id="hero-dropzone">
+                <input type="file" id="modal-hero-file" accept="image/*" />
+                <div class="upload-dropzone-content">
+                  <i class="fa-solid fa-cloud-arrow-up upload-dropzone-icon"></i>
+                  <span class="upload-dropzone-text">Upload Hero Banner Background Photo</span>
+                  <span class="upload-dropzone-subtext">Click or Drag & Drop photo from computer or phone</span>
+                </div>
+              </div>
+
+              <!-- Instant Preview Box -->
+              <div id="hero-image-preview-box" class="image-upload-preview-container">
+                <img id="hero-preview-img" class="image-upload-preview-img" src="" alt="Hero Banner Preview" style="height: 120px; object-fit: cover; width: 100%; border-radius: var(--radius-md);" />
+                <button type="button" class="btn-remove-preview" onclick="clearHeroImageUpload()" title="Remove / Change Photo">
+                  <i class="fa-solid fa-xmark"></i>
+                </button>
+              </div>
+
+              <div style="margin-top: 6px;">
+                <label style="font-size: 0.75rem; color: var(--text-dim);">Or enter local image path / URL:</label>
+                <input type="text" id="modal-hero-image" class="form-input" placeholder="e.g. images/hero_slide_saree.jpg or https://..." />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 14px; margin-top: 24px; justify-content: flex-end;">
+          <button type="button" class="btn-secondary-outline" onclick="closeAdminHeroModal()">Cancel</button>
+          <button type="submit" class="btn-primary-gold">
+            <i class="fa-solid fa-check"></i> SAVE HERO BANNER
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Global Toast Notification -->
+  <div id="toast" class="toast-box">
+    <i class="fa-solid fa-circle-check" style="color: var(--gold-primary);"></i>
+    <span id="toast-text">Action completed successfully!</span>
+  </div>
+
+  <!-- JavaScript Engine -->
+  <script src="app.js"></script>
+  <script>
+    // Failsafe session unlock
+    if (sessionStorage.getItem('kaizen_admin_auth') === 'true' || localStorage.getItem('kaizen_admin_auth') === 'true') {
+      var lock = document.getElementById('admin-lock-screen');
+      if (lock) lock.style.display = 'none';
+    }
+  </script>
+</body>
+</html>
